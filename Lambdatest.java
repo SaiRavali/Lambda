@@ -1,32 +1,35 @@
 package lambda;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertTrue;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
-
-import java.awt.Desktop.Action;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.NoSuchElementException;
 
 import javax.imageio.ImageIO;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver.Window;
 import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.WindowType;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
+@Test
 public class Lambdatest {
 
 	public RemoteWebDriver driver = null;
@@ -54,7 +57,6 @@ public class Lambdatest {
       }
   }
 
-	@Test(enabled = true)
 	public void testScript() throws Exception {
 				try {
 					driver.get("https://www.lambdatest.com/automation-demos");
@@ -78,18 +80,26 @@ public class Lambdatest {
 					Select dd1 = new Select(dropDown1);
 					dd1.selectByIndex(1);
 				  
-				    driver.findElement(By.id("tried-ecom")).click();
+				    driver.findElement(By.id("tried-ecom")).click();	   
 				    
 				    WebElement source = driver.findElementByXPath("//div[@id='__next']/div/section[2]/div/div/div[4]/div[2]/div/div/div/div/div[6]");  
 					  WebElement target = driver.findElementByXPath("//div[@id='__next']/div/section[2]/div/div/div[4]/div[2]/div/div/div/div/div[10]");
 					   Actions builder = new Actions(driver);
 					  builder.dragAndDrop(source, target).perform();
 					  
+					  System.out.println("Drag & Drop test case successful\n");
+				        Thread.sleep(3000);
+				        Assert.assertNotEquals(source, target);
+				        driver.findElement(By.id("comments")).sendKeys("Feedback");
+					  
 				   // driver.findElement(By.xpath("//div[@id='__next']/div/section[2]/div/div/div[4]/div[2]/div/div/div/div")).click();
 				   
-				    driver.findElement(By.id("comments")).sendKeys("Feedback");
-				    
-				    driver.get("https://www.lambdatest.com/selenium-automation");
+					
+					 driver.get("https://www.lambdatest.com/selenium-automation");
+				     driver.switchTo().newWindow(WindowType.TAB);
+
+				    	driver.findElementByCssSelector("Body").sendKeys(Keys.CONTROL + "t");
+				    	 driver.get("https://www.lambdatest.com/selenium-automation");
 				   
 				    WebElement ele = driver.findElement(By.xpath("//img[@title='Jenkins']"));
 					WebDriverWait wait = new WebDriverWait(driver, 60, 15000);
@@ -109,7 +119,7 @@ public class Lambdatest {
     }
 	}
 
-    @AfterClass
+	@AfterClass
     public void tearDown() throws Exception {
        if (driver != null) {
             String status = null;
